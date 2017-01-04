@@ -10,7 +10,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import codecs
 from scipy import ndimage, misc
-#import utils 
+from sklearn import svm
+import string
+
+#Global dictionary for letter classes
+
+dictionary = dict(zip(string.ascii_lowercase, range(1,27)))
 
 class DAgger(object):
     """Class for DAgger algorithm for Imitation Learning"""
@@ -20,7 +25,8 @@ class DAgger(object):
         self.words = []
         self.words_fold = []
         self.sequences = []
-    
+        self.dataset = []
+        
     def process_ocr(self):
         """Process ocr dataset"""
         letters = []
@@ -30,7 +36,7 @@ class DAgger(object):
             line = line.split('\t')
             if int(line[2]) == -1:
                 line.remove('\n')
-                sequence.append(line[1])
+                sequence.append(dictionary[line[1]])
                 image = np.array(map(lambda letter: int(letter), line[6:])).reshape((16,8))
                 letters.append(image)
                 self.words.append(letters)
@@ -41,9 +47,20 @@ class DAgger(object):
                 continue
             line.remove('\n')
             line = map(lambda letter: letter.encode('utf-8'), line)
-            sequence.append(line[1])
+            sequence.append(dictionary[line[1]])
             image = np.array(map(lambda letter: int(letter), line[6:])).reshape((16,8))
             letters.append(image)
         f.close()
-        
     
+    def aggregate_dataset(D,clf):
+        """Aggregate original trajectories dataset with new generated"""
+        return D
+        
+    def fit_policy(D,clf):
+        """Fit the policy classifier trained on a given dataset"""
+        return clf
+        
+        
+        
+        
+        
