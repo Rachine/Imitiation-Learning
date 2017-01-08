@@ -15,7 +15,7 @@ import string
 
 #Global dictionary for letter classes
 
-dictionary = dict(zip(string.ascii_lowercase, range(1,27)))
+dictionary = dict(zip(string.ascii_lowercase, range(0,26)))
 
 class DAgger(object):
     """Class for DAgger algorithm for Imitation Learning"""
@@ -37,27 +37,31 @@ class DAgger(object):
             if int(line[2]) == -1:
                 line.remove('\n')
                 sequence.append(dictionary[line[1]])
-                image = np.array(map(lambda letter: int(letter), line[6:])).reshape((16,8))
+                image = np.array(map(lambda letter: int(letter), line[6:]))
                 letters.append(image)
                 self.words.append(letters)
                 self.sequences.append(sequence)
-                self.words_fold.append(line[5])
+                self.words_fold.append(int(line[5]))
                 letters = []
                 sequence = []
                 continue
             line.remove('\n')
             line = map(lambda letter: letter.encode('utf-8'), line)
             sequence.append(dictionary[line[1]])
-            image = np.array(map(lambda letter: int(letter), line[6:])).reshape((16,8))
+            image = np.array(map(lambda letter: int(letter), line[6:]))
             letters.append(image)
         f.close()
-    
-    def aggregate_dataset(D,clf):
+        
+    def build_iniial_dataset(self):
+        """Build Initial dataset of trajectories to mimic"""
+
+    def aggregate_dataset(self,D,clf):
         """Aggregate original trajectories dataset with new generated"""
         return D
         
-    def fit_policy(D,clf):
+    def fit_policy(self,D):
         """Fit the policy classifier trained on a given dataset"""
+        clf = svm.SVC()
         return clf
         
         

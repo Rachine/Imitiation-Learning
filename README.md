@@ -1,9 +1,9 @@
-# Imitiation-Learning
+# Imitiation Learning
 Reinforcement Learning Project : School project for the course [Reinforcement Learning](http://chercheurs.lille.inria.fr/~lazaric/Webpage/MVA-RL_Course16.html) @ ENS Cachan
 
 ### Overview
 
-Implementation of DAgger(Dataset Aggregation) algorithm and SMILE(Stochastic Mixing Iterative Learning algorithm), on the [OCR dataset](http://ai.stanford.edu/~btaskar/ocr/). 
+Implementation of DAgger(Dataset Aggregation) algorithm and SMILE(Stochastic Mixing Iterative Learning algorithm), on the [OCR dataset](http://ai.stanford.edu/~btaskar/ocr/).
 
 ### Authors
 - Kimia Nadjahi
