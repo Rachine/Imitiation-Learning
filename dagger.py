@@ -12,6 +12,7 @@ import codecs
 from scipy import ndimage, misc
 from sklearn import svm
 import string
+import pdb
 
 #Global dictionary for letter classes
 
@@ -26,6 +27,7 @@ class DAgger(object):
         self.words_fold = []
         self.sequences = []
         self.dataset = []
+        self.labels = []
         
     def process_ocr(self):
         """Process ocr dataset"""
@@ -52,16 +54,26 @@ class DAgger(object):
             letters.append(image)
         f.close()
         
-    def build_iniial_dataset(self):
+    def build_initial_dataset(self):
         """Build Initial dataset of trajectories to mimic"""
-
-    def aggregate_dataset(self,D,clf):
-        """Aggregate original trajectories dataset with new generated"""
-        return D
-        
-    def fit_policy(self,D):
+        self.process_ocr()
+        num_words = len(self.words)
+#        traj_word = []
+        #TODO build good indexing for the train and test
+        for idx in range(num_words): 
+            for jdx in range(1,len(self.words[idx])): 
+                X = np.concatenate([self.words[idx][jdx], np.array([self.sequences[idx][jdx-1]])],  axis = 0)   
+#                pdb.set_trace()
+                self.dataset.append(X.tolist())
+                self.labels.append(self.sequences[idx][jdx])
+                
+    def aggregate_dataset(self,policy):
+        """Aggregate original trajectories dataset with new generated from policy"""
+                    
+    def fit_policy(self):
         """Fit the policy classifier trained on a given dataset"""
-        clf = svm.SVC()
+        clf = svm.SVC(decision_function_shape='ovo')
+        clf.fit(self.dataset,self.labels)
         return clf
         
         
