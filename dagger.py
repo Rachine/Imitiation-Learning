@@ -26,8 +26,8 @@ class DAgger(object):
         self.words = []
         self.words_fold = []
         self.sequences = []
-        self.dataset = []
-        self.labels = []
+        self.dataset = {0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]}
+        self.labels = {0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]}
         
     def process_ocr(self):
         """Process ocr dataset"""
@@ -58,22 +58,21 @@ class DAgger(object):
         """Build Initial dataset of trajectories to mimic"""
         self.process_ocr()
         num_words = len(self.words)
-#        traj_word = []
-        #TODO build good indexing for the train and test
         for idx in range(num_words): 
             for jdx in range(1,len(self.words[idx])): 
                 X = np.concatenate([self.words[idx][jdx], np.array([self.sequences[idx][jdx-1]])],  axis = 0)   
 #                pdb.set_trace()
-                self.dataset.append(X.tolist())
-                self.labels.append(self.sequences[idx][jdx])
+                self.dataset[self.words_fold[idx]].append(X.tolist())
+                self.labels[self.words_fold[idx]].append(self.sequences[idx][jdx])
                 
     def aggregate_dataset(self,policy):
         """Aggregate original trajectories dataset with new generated from policy"""
+        
                     
-    def fit_policy(self):
+    def fit_policy(self, X,y):
         """Fit the policy classifier trained on a given dataset"""
         clf = svm.SVC(decision_function_shape='ovo')
-        clf.fit(self.dataset,self.labels)
+        clf.fit(X,y)
         return clf
         
         
