@@ -8,9 +8,14 @@ Created on Tue Jan  3 14:04:48 2017
 import os.path
 import numpy as np
 import matplotlib.pyplot as plt
+
 import codecs
 from scipy import ndimage, misc
+
 from sklearn import svm
+from sklearn import linear_model
+from sklearn.metrics import hamming_loss
+
 import string
 import pdb
 
@@ -63,19 +68,27 @@ class DAgger(object):
                 X = np.concatenate([self.words[idx][jdx], np.array([self.sequences[idx][jdx-1]])],  axis = 0)   
 #                pdb.set_trace()
                 self.dataset[self.words_fold[idx]].append(X.tolist())
-                self.labels[self.words_fold[idx]].append(self.sequences[idx][jdx])
-                
-    def aggregate_dataset(self,policy):
-        """Aggregate original trajectories dataset with new generated from policy"""
+                self.labels[self.words_fold[idx]].append(self.sequences[idx][jdx])        
         
+    def aggregate_dataset(self, agg_data = [], hat_policy, test_fold = 9):
+        """Aggregate original trajectories dataset with new generated from policy"""
+        num_words = len(self.words)
+        for idx in range(num_words):
+            if self.words_fold[idx] != test_fold: 
+                for jdx in range(1,len(self.words[idx])):
+                    X = np.concatenate([self.words[idx][jdx], np.array([self.sequences[idx][jdx-1]])],  axis = 0)
+                    y_pred = hat_policy.predict(X)
+                    if y_pred != self.sequences[idx][jdx] and jdx != (len(self.words[idx]-1)):
+                        X_new = np.concatenate([self.words[idx][jdx+1], y_pred],  axis = 0)
+                        agg_data.append([X_new,self.sequences[idx][jdx+1]])
+        return agg_data
                     
-    def fit_policy(self, X,y):
+    def run(self, X,y):
         """Fit the policy classifier trained on a given dataset"""
-        clf = svm.SVC(decision_function_shape='ovo')
+        clf = linear_model.SGDClassifier()
         clf.fit(X,y)
         return clf
         
-        
-        
+    
         
         
